@@ -18,7 +18,6 @@ export const APIPage = createAPIPage(openapi, {
       return createElement(ScalarPlayground, {
         path: props.path,
         method,
-        spec: props.ctx.schema.bundled as Record<string, unknown>,
       });
     },
   },

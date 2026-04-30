@@ -1,10 +1,19 @@
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import './global.css';
 import { Inter } from 'next/font/google';
+import type { Metadata } from 'next';
 
 const inter = Inter({
   subsets: ['latin'],
 });
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  title: 'HyreLog Help Center',
+  description: 'Customer documentation for HyreLog',
+};
 
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
