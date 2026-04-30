@@ -1,45 +1,42 @@
 # hyrelog-docs
 
-This is a Next.js application generated with
-[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
+Customer-facing HyreLog Help Center built with Next.js + Fumadocs.
 
-Run development server:
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-pnpm dev
-# or
-yarn dev
 ```
 
-Open http://localhost:3000 with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-## Explore
+## Route structure
 
-In the project, you can see:
+Docs are served from root paths (no `/docs` prefix), for example:
 
-- `lib/source.ts`: Code for content source adapter, [`loader()`](https://fumadocs.dev/docs/headless/source-api) provides the interface to access your content.
-- `lib/layout.shared.tsx`: Shared options for layouts, optional but preferred to keep.
+- `/`
+- `/getting-started/create-your-account`
+- `/guides/manage-api-keys`
+- `/api/reference`
+- `/api/endpoints/health-check`
 
-| Route                     | Description                                            |
-| ------------------------- | ------------------------------------------------------ |
-| `app/(home)`              | The route group for your landing page and other pages. |
-| `app/docs`                | The documentation layout and pages.                    |
-| `app/api/search/route.ts` | The Route Handler for search.                          |
+Legacy `/docs/*` links are redirected to root equivalents via `next.config.mjs`.
 
-### Fumadocs MDX
+## Deployment (Vercel + GitHub)
 
-A `source.config.ts` config file has been included, you can customise different options like frontmatter schema.
+This project is intended for standard Next.js deployment on Vercel (not static export mode).
 
-Read the [Introduction](https://fumadocs.dev/docs/mdx) for further details.
+1. Push to GitHub.
+2. Connect repo to Vercel.
+3. Use default Next.js build settings.
+4. Set environment variable:
+   - `NEXT_PUBLIC_SITE_URL=https://your-docs-domain.com`
 
-## Learn More
+`metadataBase` is sourced from `NEXT_PUBLIC_SITE_URL` in `app/layout.tsx`.
 
-To learn more about Next.js and Fumadocs, take a look at the following
-resources:
+## Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
-  features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Fumadocs](https://fumadocs.dev) - learn about Fumadocs
+- OpenAPI source: [https://api.hyrelog.com/openapi.json](https://api.hyrelog.com/openapi.json)
+- Docs content lives in `content/docs`.
+- Docs sidebar grouping is controlled by `meta.json` files in each docs folder.
