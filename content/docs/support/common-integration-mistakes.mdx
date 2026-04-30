@@ -1,0 +1,24 @@
+---
+title: Common Integration Mistakes
+description: Avoid the most frequent pitfalls when integrating HyreLog.
+---
+
+## 1) Not Sending Required Fields
+
+`category` and `action` are required for event ingestion.
+
+## 2) Reusing The Wrong API Key Scope
+
+Some endpoints require company-scoped keys. Validate key scope with `/v1/keys/status`.
+
+## 3) Missing Idempotency On Retries
+
+Without `idempotencyKey`, network retries may create duplicates.
+
+## 4) Ignoring Pagination
+
+Event queries and delivery lists can paginate. Always handle `nextCursor`.
+
+## 5) Slow Webhook Handlers
+
+Long webhook processing increases failures. Respond fast and process async.

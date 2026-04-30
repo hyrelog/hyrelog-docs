@@ -1,0 +1,29 @@
+---
+title: Query And Filter Events
+description: Use filters and cursor pagination to retrieve exactly the events you need.
+---
+
+## Query Parameters
+
+`GET /v1/events` supports:
+
+- `limit` (1-200)
+- `cursor`
+- `from` / `to` (ISO datetime)
+- `category`
+- `action`
+- `projectId`
+- `workspaceId` (company keys)
+
+## Example
+
+```bash
+curl "https://api.hyrelog.com/v1/events?limit=50&category=auth&action=user.login" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Pagination Pattern
+
+1. Call endpoint without `cursor`.
+2. Read `nextCursor`.
+3. Repeat with `?cursor=...` until `nextCursor` is `null`.

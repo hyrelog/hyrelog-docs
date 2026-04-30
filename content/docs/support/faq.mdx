@@ -1,0 +1,24 @@
+---
+title: FAQ
+description: Frequently asked questions from teams adopting HyreLog.
+---
+
+## Do we need to host anything?
+
+No. HyreLog API is hosted; you integrate via HTTPS.
+
+## Can we test before production?
+
+Yes. Create a separate workspace or key for staging and test end-to-end flow there first.
+
+## How do we know if a key is healthy?
+
+Use `GET /v1/keys/status` and review `status`, `lastUsedAt`, and `healthScore`.
+
+## How do we export data?
+
+Create an export job with `POST /v1/exports`, then download using `/v1/exports/{jobId}/download`.
+
+## Where is the full endpoint specification?
+
+In the OpenAPI document: [https://api.hyrelog.com/openapi.json](https://api.hyrelog.com/openapi.json).

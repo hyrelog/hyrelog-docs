@@ -1,0 +1,42 @@
+---
+title: Node.js Quickstart
+description: Send and query HyreLog events from Node.js in a few minutes.
+---
+
+## Install
+
+```bash
+npm install axios
+```
+
+## Send An Event
+
+```js
+import axios from 'axios';
+
+const API_BASE = 'https://api.hyrelog.com';
+const API_KEY = process.env.HYRELOG_API_KEY;
+
+await axios.post(
+  `${API_BASE}/v1/events`,
+  {
+    category: 'auth',
+    action: 'user.login',
+    actor: { id: 'user_123', email: 'user@example.com' },
+    metadata: { source: 'node-quickstart' },
+  },
+  {
+    headers: { Authorization: `Bearer ${API_KEY}` },
+  },
+);
+```
+
+## Query Events
+
+```js
+const { data } = await axios.get(`${API_BASE}/v1/events?limit=10`, {
+  headers: { Authorization: `Bearer ${API_KEY}` },
+});
+
+console.log(data);
+```

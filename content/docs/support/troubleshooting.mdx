@@ -1,0 +1,28 @@
+---
+title: Troubleshooting
+description: Common customer issues and quick diagnostics for HyreLog API usage.
+---
+
+## 401 Or 403 Errors
+
+- Verify the API key is valid and active.
+- Confirm key scope (workspace vs company) matches the endpoint.
+- Check whether your plan includes the requested feature.
+
+## Events Not Appearing
+
+- Confirm event request returned `201` or `200`.
+- Verify `category` and `action` are present in payload.
+- Query `/v1/events` with a small time window to confirm ingestion.
+
+## Webhook Delivery Failures
+
+- Confirm webhook endpoint is reachable over HTTPS.
+- Check your receiver timeout and retry handling.
+- Inspect deliveries using `/v1/webhooks/{webhookId}/deliveries`.
+
+## Export Job Issues
+
+- Confirm job status via `/v1/exports/{jobId}` before download.
+- For archived sources, include required `from`/`to` filters.
+- Retry downloads with streaming to file for large payloads.

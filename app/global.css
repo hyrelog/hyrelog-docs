@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+@import 'fumadocs-openapi/css/preset.css';
+@import '@scalar/api-client-react/style.css';
 
 html {
   scrollbar-gutter: stable;
@@ -9,4 +11,12 @@ html {
 html > body[data-scroll-locked] {
   margin-right: 0px !important;
   --removed-body-scroll-bar-size: 0px !important;
+}
+
+/* Keep Scalar modal above Fumadocs sidebar/header layers. */
+body > .scalar-app {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  isolation: isolate;
 }

@@ -1,0 +1,12 @@
+{
+  "title": "Guides",
+  "pages": [
+    "manage-api-keys",
+    "set-up-webhooks",
+    "create-and-download-exports",
+    "query-and-filter-events",
+    "webhook-delivery-lifecycle",
+    "sdk-helpers-node",
+    "sdk-helpers-python"
+  ]
+}

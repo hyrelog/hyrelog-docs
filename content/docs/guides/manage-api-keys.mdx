@@ -1,0 +1,27 @@
+---
+title: Manage API Keys
+description: Create, rotate, and monitor API keys used for HyreLog API access.
+---
+
+## Key Concepts
+
+- API keys are created and rotated in the dashboard.
+- Use least privilege for key scope (workspace vs company).
+- Store keys in your secret manager, never in source control.
+
+## Recommended Practices
+
+- Create separate keys per environment (dev, staging, prod).
+- Rotate keys on a regular schedule.
+- Replace keys immediately if exposed.
+
+## Check Key Status
+
+Use the API to inspect the key making the request:
+
+```bash
+curl "https://api.hyrelog.com/v1/keys/status" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+The response includes key metadata such as `scope`, `status`, `lastUsedAt`, and `healthScore`.

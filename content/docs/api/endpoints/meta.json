@@ -1,0 +1,19 @@
+{
+  "title": "Endpoints",
+  "pages": [
+    "health-check",
+    "events-ingest",
+    "events-query",
+    "keys-create",
+    "keys-rotate",
+    "keys-status",
+    "webhooks-create",
+    "webhooks-list",
+    "webhooks-disable",
+    "webhooks-enable",
+    "webhooks-deliveries",
+    "exports-create",
+    "exports-status",
+    "exports-download"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "title": "API",
+  "pages": [
+    "reference",
+    "authentication",
+    "errors-and-status-codes",
+    "endpoints"
+  ]
+}

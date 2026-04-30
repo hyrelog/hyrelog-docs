@@ -1,0 +1,23 @@
+---
+title: Authentication
+description: How to authenticate requests to the HyreLog API.
+---
+
+## Bearer API Keys
+
+Use `Authorization: Bearer YOUR_API_KEY` for `/v1/*` endpoints.
+
+```bash
+curl "https://api.hyrelog.com/v1/keys/status" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Unauthenticated Endpoint
+
+`GET /health` is public and can be used for connectivity checks.
+
+## Key Handling Best Practices
+
+- Store keys in secret managers, not code.
+- Rotate keys regularly.
+- Use distinct keys per environment and application.

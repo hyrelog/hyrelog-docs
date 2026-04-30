@@ -1,0 +1,12 @@
+{
+  "title": "HyreLog Help Center",
+  "pages": [
+    "index",
+    "concepts",
+    "getting-started",
+    "quickstarts",
+    "guides",
+    "api",
+    "support"
+  ]
+}

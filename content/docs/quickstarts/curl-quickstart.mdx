@@ -1,0 +1,30 @@
+---
+title: cURL Quickstart
+description: Minimal command-line examples for sending and querying events.
+---
+
+## Environment
+
+```bash
+export HYRELOG_API_KEY='YOUR_API_KEY'
+```
+
+## Send Event
+
+```bash
+curl -X POST "https://api.hyrelog.com/v1/events" \
+  -H "Authorization: Bearer ${HYRELOG_API_KEY}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "category": "auth",
+    "action": "user.login",
+    "metadata": { "source": "curl-quickstart" }
+  }'
+```
+
+## Query Events
+
+```bash
+curl "https://api.hyrelog.com/v1/events?limit=10" \
+  -H "Authorization: Bearer ${HYRELOG_API_KEY}"
+```

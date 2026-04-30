@@ -1,0 +1,39 @@
+---
+title: Create And Download Exports
+description: Run export jobs for audit data and download JSONL or CSV output.
+---
+
+## Create An Export Job
+
+```bash
+curl -X POST "https://api.hyrelog.com/v1/exports" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": "HOT",
+    "format": "JSONL",
+    "filters": {
+      "from": "2026-01-01T00:00:00Z",
+      "to": "2026-01-31T23:59:59Z"
+    }
+  }'
+```
+
+Expected: `201` with `jobId`.
+
+## Check Job Status
+
+```bash
+curl "https://api.hyrelog.com/v1/exports/JOB_ID" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Download Export
+
+```bash
+curl -L "https://api.hyrelog.com/v1/exports/JOB_ID/download" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -o hyrelog-export.jsonl
+```
+
+For large exports, keep the request streaming and write directly to disk.

@@ -1,0 +1,54 @@
+---
+title: SDK Helpers (Python)
+description: Reusable Python helper functions for HyreLog API calls.
+---
+
+## Reusable Client
+
+```python
+import requests
+
+API_BASE = "https://api.hyrelog.com"
+
+
+class HyreLogClient:
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+        self.headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        }
+
+    def _request(self, method: str, path: str, **kwargs):
+        resp = requests.request(
+            method,
+            f"{API_BASE}{path}",
+            headers=self.headers,
+            timeout=30,
+            **kwargs,
+        )
+        if not resp.ok:
+            raise RuntimeError(f"HyreLog API error {resp.status_code}: {resp.text}")
+        return resp.json()
+
+    def send_event(self, payload: dict):
+        return self._request("POST", "/v1/events", json=payload)
+
+    def list_events(self, params: dict | None = None):
+        return self._request("GET", "/v1/events", params=params or {})
+
+    def key_status(self):
+        return self._request("GET", "/v1/keys/status")
+```
+
+## Usage Example
+
+```python
+client = HyreLogClient(api_key="YOUR_API_KEY")
+
+client.send_event({
+    "category": "auth",
+    "action": "user.login",
+    "idempotencyKey": "req-1234",
+})
+```

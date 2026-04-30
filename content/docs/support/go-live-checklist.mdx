@@ -1,0 +1,40 @@
+---
+title: Go Live Checklist
+description: Production readiness checklist for launching your HyreLog integration.
+---
+
+## Authentication And Security
+
+- [ ] Production API key created and stored in secret manager
+- [ ] Separate keys per environment (dev/staging/prod)
+- [ ] Key rotation procedure documented
+
+## Event Quality
+
+- [ ] All critical user/admin actions mapped to categories/actions
+- [ ] Actor and resource identifiers included where appropriate
+- [ ] Idempotency keys added to retryable ingestion flows
+
+## Reliability
+
+- [ ] Retry logic with backoff for transient API failures
+- [ ] Pagination handling implemented for event listing
+- [ ] Monitoring and alerting on API error rates
+
+## Webhooks (If Used)
+
+- [ ] Endpoint is public HTTPS and returns fast `2xx`
+- [ ] Signature/secret handling verified in your receiver
+- [ ] Delivery failure monitoring in place
+
+## Exports (If Used)
+
+- [ ] Export filters tested for required date windows
+- [ ] Download flow tested for large files
+- [ ] Data retention and storage policy confirmed
+
+## Support Readiness
+
+- [ ] Team knows where to find troubleshooting docs
+- [ ] Support escalation template pre-filled for your environment
+- [ ] On-call owner defined for launch window

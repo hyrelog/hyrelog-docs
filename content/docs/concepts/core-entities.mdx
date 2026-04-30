@@ -1,0 +1,29 @@
+---
+title: Core Entities
+description: Learn what HyreLog entities mean and how they relate.
+---
+
+## Workspace
+
+A workspace is your primary boundary for event data and integrations.
+
+## API Key
+
+An API key authenticates requests to `/v1/*`. Keys can be scoped to workspace or company contexts depending on endpoint use.
+
+## Event
+
+An event is a single audit record with required fields:
+
+- `category`
+- `action`
+
+Common optional fields include `timestamp`, `actor`, `resource`, `metadata`, and `idempotencyKey`.
+
+## Webhook
+
+A webhook is an outbound delivery endpoint subscribed to event types (for example `AUDIT_EVENT_CREATED`).
+
+## Export Job
+
+An export job prepares and streams data in `JSONL` or `CSV` format based on selected source and filters.

@@ -1,0 +1,28 @@
+---
+title: Webhook Delivery Lifecycle
+description: Understand webhook states, retries, and operational checks.
+---
+
+## Delivery Statuses
+
+Webhook deliveries can include statuses such as:
+
+- `PENDING`
+- `SENDING`
+- `SUCCEEDED`
+- `FAILED`
+- `RETRY_SCHEDULED`
+
+## Observe Deliveries
+
+```bash
+curl "https://api.hyrelog.com/v1/webhooks/WEBHOOK_ID/deliveries?limit=50" \
+  -H "Authorization: Bearer YOUR_COMPANY_API_KEY"
+```
+
+## Operational Recommendations
+
+- Return `2xx` quickly from your webhook endpoint.
+- Move expensive processing to async workers in your system.
+- Log delivery IDs and request IDs for debugging.
+- Monitor failure count trends and alert on sustained failures.

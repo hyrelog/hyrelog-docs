@@ -1,0 +1,25 @@
+---
+title: Errors And Status Codes
+description: Understand common response codes and how to resolve integration failures.
+---
+
+## Common Success Codes
+
+- `200`: Successful read or idempotent replay
+- `201`: New resource created
+
+## Common Error Codes
+
+- `400`: Invalid request body or parameters
+- `401`: Missing or invalid API key
+- `403`: Authenticated but not authorized (scope/feature restrictions)
+- `404`: Resource not found
+- `429`: Rate or usage limit reached
+- `5xx`: Server-side issue; retry with backoff
+
+## Troubleshooting Approach
+
+1. Log full request and response metadata.
+2. Confirm endpoint, key scope, and payload shape.
+3. Retry safe operations with exponential backoff.
+4. Contact support with timestamp and endpoint details if issue persists.

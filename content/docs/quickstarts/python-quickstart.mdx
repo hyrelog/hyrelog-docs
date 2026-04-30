@@ -1,0 +1,39 @@
+---
+title: Python Quickstart
+description: Send and query HyreLog events with Python.
+---
+
+## Install
+
+```bash
+pip install requests
+```
+
+## Send An Event
+
+```python
+import os
+import requests
+
+base = "https://api.hyrelog.com"
+headers = {"Authorization": f"Bearer {os.environ['HYRELOG_API_KEY']}"}
+
+resp = requests.post(
+    f"{base}/v1/events",
+    json={
+        "category": "auth",
+        "action": "user.login",
+        "actor": {"id": "user_123", "email": "user@example.com"},
+        "metadata": {"source": "python-quickstart"},
+    },
+    headers=headers,
+)
+print(resp.status_code, resp.json())
+```
+
+## Query Events
+
+```python
+resp = requests.get(f"{base}/v1/events?limit=10", headers=headers)
+print(resp.status_code, resp.json())
+```

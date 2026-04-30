@@ -1,0 +1,40 @@
+---
+title: Set Up Webhooks
+description: Configure webhook endpoints and monitor deliveries.
+---
+
+## Requirements
+
+- Company-scoped API key
+- Public HTTPS endpoint for receiving events
+- Plan with webhook support
+
+## Create A Webhook
+
+```bash
+curl -X POST "https://api.hyrelog.com/v1/workspaces/WORKSPACE_ID/webhooks" \
+  -H "Authorization: Bearer YOUR_COMPANY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://your-app.example.com/hyrelog/webhook",
+    "events": ["AUDIT_EVENT_CREATED"]
+  }'
+```
+
+Store the returned secret safely; it is shown once.
+
+## List Webhooks
+
+```bash
+curl "https://api.hyrelog.com/v1/workspaces/WORKSPACE_ID/webhooks" \
+  -H "Authorization: Bearer YOUR_COMPANY_API_KEY"
+```
+
+## Inspect Deliveries
+
+```bash
+curl "https://api.hyrelog.com/v1/webhooks/WEBHOOK_ID/deliveries?limit=50" \
+  -H "Authorization: Bearer YOUR_COMPANY_API_KEY"
+```
+
+Use delivery status to troubleshoot failures and retries.

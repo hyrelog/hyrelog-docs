@@ -1,0 +1,27 @@
+---
+title: How HyreLog Works
+description: Understand the core flow from ingestion to search, webhooks, and exports.
+---
+
+## The Core Flow
+
+1. Your app sends audit events to `POST /v1/events`.
+2. HyreLog validates and stores the event.
+3. You query events with `GET /v1/events`.
+4. Optional: HyreLog pushes matching events to your webhook endpoint.
+5. Optional: You create export jobs to download data at scale.
+
+## What HyreLog Is Designed For
+
+- Product audit trails and compliance logging
+- Security and access event tracking
+- Operational analytics over event streams
+- Reliable downstream delivery via webhooks
+
+## Typical Integration Pattern
+
+- Start with one workspace and one API key.
+- Instrument critical user actions first.
+- Add metadata incrementally (tenant ID, actor role, feature area).
+- Use idempotency keys for retry-safe ingestion.
+- Add webhooks and exports after ingestion is stable.
