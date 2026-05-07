@@ -34,6 +34,48 @@ Currently supported:
 
 `events` in webhook configuration refers to webhook event types (not your ingested event `action` value).
 
+## Delivery Request Format
+
+HyreLog delivers webhooks as `POST` JSON with headers similar to:
+
+- `content-type: application/json`
+- `x-hyrelog-signature: v1=<hex_hmac_sha256>`
+- `x-hyrelog-timestamp: <unix_seconds>`
+- `x-hyrelog-delivery-id: <uuid>`
+- `x-hyrelog-attempt: <attempt_number>`
+- `x-trace-id: <trace_id_if_available>`
+
+Sample payload body:
+
+```json
+{
+  "id": "ab7f0ed0-0a40-4843-ad0c-5fa1ee65e081",
+  "timestamp": "2026-05-07T13:29:25.000Z",
+  "companyId": "c7d7f2f2-20f9-4d2e-a188-8f8f6c2ef001",
+  "workspaceId": "077df3cc-9ea1-423a-be6b-c34b9cffd75b",
+  "projectId": "b2fd8619-32fc-4de7-aa76-a4cd0f5f0f3a",
+  "category": "AUTH",
+  "action": "USER_LOGIN",
+  "actor": {
+    "id": "u_123",
+    "email": "person@example.com",
+    "role": "ADMIN"
+  },
+  "resource": {
+    "type": "USER",
+    "id": "user_42"
+  },
+  "metadata": {
+    "ip": "203.0.113.10"
+  },
+  "traceId": "933ed271-e43f-42ac-bdec-1471dfc38707",
+  "hash": "current_chain_hash",
+  "prevHash": "previous_chain_hash"
+}
+```
+
+`x-hyrelog-signature` is HMAC-SHA256 over the raw JSON body using your webhook secret.
+
 ## List Webhooks
 
 ```bash
