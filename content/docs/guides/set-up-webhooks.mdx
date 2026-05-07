@@ -17,11 +17,22 @@ curl -X POST "https://api.hyrelog.com/v1/workspaces/WORKSPACE_ID/webhooks" \
   -H "Content-Type: application/json" \
   -d '{
     "url": "https://your-app.example.com/hyrelog/webhook",
-    "events": ["AUDIT_EVENT_CREATED"]
+    "events": ["AUDIT_EVENT_CREATED"],
+    "customSecret": "optional-your-own-signing-secret"
   }'
 ```
 
+If `customSecret` is omitted, HyreLog generates a random signing secret.
+
 Store the returned secret safely; it is shown once.
+
+## Supported Event Types
+
+Currently supported:
+
+- `AUDIT_EVENT_CREATED`
+
+`events` in webhook configuration refers to webhook event types (not your ingested event `action` value).
 
 ## List Webhooks
 

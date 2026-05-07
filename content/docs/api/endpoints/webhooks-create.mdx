@@ -4,3 +4,9 @@ description: Create a webhook endpoint for a workspace.
 ---
 
 <EndpointAPIReference path="/v1/workspaces/{workspaceId}/webhooks" method="post" />
+
+### Notes
+
+- `events` currently supports: `AUDIT_EVENT_CREATED`.
+- You can optionally send `customSecret`; if omitted, HyreLog generates a random secret.
+- The returned `secret` is shown once, so store it securely.

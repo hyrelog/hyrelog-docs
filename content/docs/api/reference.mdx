@@ -23,6 +23,11 @@ description: OpenAPI-powered reference plus endpoint pages grouped by tag.
 - **Webhooks:** create/list/enable/disable webhooks and inspect deliveries
 - **Exports:** create export jobs, check status, download data
 
+## Webhook Notes
+
+- Current webhook event types: `AUDIT_EVENT_CREATED` only.
+- Webhook create supports optional `customSecret`; if omitted, a random secret is generated and returned once.
+
 ## Browse Endpoints
 
 - `/api/endpoints/health-check`
