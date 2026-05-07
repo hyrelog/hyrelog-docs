@@ -34,6 +34,15 @@ Currently supported:
 
 `events` in webhook configuration refers to webhook event types (not your ingested event `action` value).
 
+## How Signing Works
+
+- HyreLog and your receiver share a webhook secret.
+- HyreLog **does not send the raw secret** in webhook requests.
+- Instead, HyreLog signs the raw request body using HMAC-SHA256 and sends:
+  - `x-hyrelog-signature: v1=<signature>`
+- Your receiver computes the same HMAC with its stored secret and compares signatures.
+- If signatures match, the request is authentic and body integrity is verified.
+
 ## Delivery Request Format
 
 HyreLog delivers webhooks as `POST` JSON with headers similar to:
@@ -75,6 +84,11 @@ Sample payload body:
 ```
 
 `x-hyrelog-signature` is HMAC-SHA256 over the raw JSON body using your webhook secret.
+
+If your endpoint also requires a separate access token/header, configure your receiver to accept both checks:
+
+1. transport/auth header checks (if any), and
+2. HyreLog signature verification.
 
 ## List Webhooks
 
