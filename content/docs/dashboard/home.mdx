@@ -1,0 +1,81 @@
+---
+title: Dashboard home
+description: Company and workspace overview, scope switching, KPI tiles, charts, and team directory.
+---
+
+The dashboard **home** page (`/`) is your operational landing surface. It loads HyreLog metrics for the active scope and surfaces charts, live activity, and shortcuts into Event Explorer and settings.
+
+## Scope: company vs workspace
+
+At the top of the page, the **scope bar** shows who you are viewing as and lets you change scope.
+
+### Company-level roles (`OWNER`, `ADMIN`, `BILLING`)
+
+- **Default on login:** **Company overview** — aggregated metrics across all workspaces you can administer.
+- **View as** dropdown includes:
+  - Your **company name** (full company metrics)
+  - Each **workspace** (name, region, member count)
+- Choosing a workspace updates the URL with `?workspace=<dashboard-workspace-id>` and reloads the page in **workspace mode** (charts and totals scoped to that workspace).
+
+### Workspace members (`MEMBER`)
+
+- You always operate in **workspace scope** (no company-wide home).
+- **View as** lists only workspaces you are a member of.
+- The first workspace (alphabetical by name) is used when no `?workspace=` parameter is present.
+
+### URL parameter
+
+| Query | Meaning |
+|-------|---------|
+| *(none)* | Company overview (admins only) |
+| `?workspace=<uuid>` | Focus home on that workspace (Prisma workspace id from the dashboard database) |
+
+Invalid or unauthorized workspace ids are ignored; members fall back to their first allowed workspace.
+
+## KPI ribbon (four tiles)
+
+Below the scope bar, four **summary tiles** show key numbers for the active scope:
+
+**Company overview**
+
+| Tile | Meaning |
+|------|---------|
+| Workspaces | Count of active workspaces |
+| Active members | Company members with `ACTIVE` status |
+| Pending invites | Company invites awaiting acceptance |
+| Events (7d) | Rolling 7-day event total from HyreLog; hint may include 24h and MTD sum |
+
+**Workspace scope**
+
+| Tile | Meaning |
+|------|---------|
+| Projects | Active projects in the workspace |
+| Workspace members | Members attached to the workspace |
+| Region | Preferred data plane / region label |
+| Events (7d) | Rolling 7-day total for this workspace |
+
+The first tile may include a small **sparkline** derived from the 7-day volume histogram when data is available.
+
+## Main content (charts & panels)
+
+Below the KPI ribbon, the page shows the same rich analytics as before, without duplicating the old page header:
+
+- **Event volume** chart (rolling windows: 1h, 24h, 7d, 30d) with native or partitioned histograms depending on API capability
+- **Workspace heatmap** and drill-down table (company overview)
+- **Live activity** feed (recent events sample)
+- **Top actions** and **top categories** (bounded sample or native 7d histogram buckets)
+- **API health** and **integrity** cards
+- **Billing usage** (company roles with billing insight policy only)
+- **Team directory** with a preview of up to five active members (name, email, role) and links to Members, Invites, and Webhooks
+
+Quick action buttons above the ribbon link to **Event Explorer**, **Workspaces** or **workspace keys**, and **API & keys** depending on scope.
+
+## What was removed from home
+
+The previous **Highlights** / **Needs attention** insight cards were removed to reduce noise. Operational signals remain available inside chart footnotes and API health cards where relevant.
+
+## Performance notes
+
+- Company admins with billing access fetch subscription/usage summaries in parallel with home data for plan-aware tiles.
+- Workspace-only users do not load billing summaries on the home page.
+- HyreLog API calls respect workspace focus: when an admin selects a workspace, insights and project lists are scoped to that workspace.

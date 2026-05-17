@@ -2,6 +2,7 @@
   "title": "API",
   "pages": [
     "reference",
+    "dashboard-api-overview",
     "authentication",
     "errors-and-status-codes",
     "endpoints"

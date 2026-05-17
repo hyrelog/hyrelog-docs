@@ -37,6 +37,8 @@ This project is intended for standard Next.js deployment on Vercel (not static e
 
 ## Notes
 
-- OpenAPI source: [https://api.hyrelog.com/openapi.json](https://api.hyrelog.com/openapi.json)
+- OpenAPI source (live): [https://api.hyrelog.com/openapi.json](https://api.hyrelog.com/openapi.json) — generated at deploy from tagged `/v1/*` routes only; `/dashboard/*` is excluded.
+- Optional static snapshot (sibling repo): `../docs/api-reference/openapi.json` — refresh with `curl -sS https://api.hyrelog.com/openapi.json -o ../docs/api-reference/openapi.json`
 - Docs content lives in `content/docs`.
 - Docs sidebar grouping is controlled by `meta.json` files in each docs folder.
+- **Dashboard** product guides live under `content/docs/dashboard/` (May 2026 production update documented in `content/docs/release-notes/`).

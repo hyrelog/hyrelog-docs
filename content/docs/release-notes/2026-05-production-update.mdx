@@ -1,0 +1,99 @@
+---
+title: May 2026 — Production update
+description: Dashboard home redesign, Event Explorer, saved views, exports, API migrations, and operational improvements now in production.
+---
+
+This release note documents customer-visible and operator-relevant changes shipped to **production** across the HyreLog dashboard, API, and documentation. It reflects work completed through May 2026.
+
+## Dashboard — home
+
+- **New scope bar** at the top of home: plain card layout with company vs workspace badge, title, plan line (when billing data is available), and **View as** dropdown.
+- **Company admins** land on **company overview** by default; can switch to any workspace via `?workspace=` (Prisma workspace id).
+- **Workspace members** always see workspace scope; dropdown lists all workspaces they can access.
+- **Four KPI tiles** (stat ribbon) with optional 7-day sparkline on the first tile.
+- Charts, heatmap, live feed, top actions/categories, billing, API health, and team directory retained; duplicate page header and metric row hidden when using the new layout.
+- **Team directory** card now previews up to five active members (initials, name, email, role) with link to full member list.
+- Removed **Highlights / Needs attention** insight cards from home and workspace dashboards.
+
+## Dashboard — Event Explorer
+
+- Full **Event Explorer** at `/events` with URL-driven filters, sort, pagination (10–200 rows per page).
+- **Filter chips** and reset behavior; workspace chip locked for single-workspace members.
+- **Event detail drawer** with copyable id, actor/resource formatting, redacted metadata JSON, integrity hints.
+- **Export filtered events** dialog integrated with capability probing.
+- **Saved views** menu and save/edit dialog — see [Saved explorer views](/dashboard/saved-views).
+- Deep links use `savedView` query parameter when a named view is active.
+
+## Dashboard — exports
+
+- **Exports** page with job table, status badges, detail drawer, download, rerun.
+- **Export templates**: save and rerun named filter presets (dashboard API).
+- Exports can reference **`savedExplorerViewId`**; API merges saved view query with request filters (body overrides).
+- Download proxy with size limits and sanitized errors.
+- Explorer deep links from export job detail when filters were stored.
+
+## Dashboard — analytics (usage)
+
+- **Google Analytics 4** (`G-3M8XN6EHGW`) on all dashboard pages via root layout, with client-side page view updates on App Router navigations.
+- Separate **debug analytics** hooks for export/saved-view actions (console-only when `HYRELOG_EXPORT_ANALYTICS_DEBUG=1`) — not sent to GA.
+
+## API — data model & migrations
+
+Regional API databases (per data region):
+
+| Migration | Purpose |
+|-----------|---------|
+| `20260216120000_saved_explorer_views` | `saved_explorer_views` table for named EventQuery presets |
+| `20260514120000_export_templates` | `export_templates` table for reusable export definitions |
+
+Dashboard database:
+
+| Migration | Purpose |
+|-----------|---------|
+| `20260215120000_audit_action_export_evidence` | Audit enum values for export evidence |
+| `20260514120000_audit_action_saved_explorer_views` | Audit enum values for saved view lifecycle |
+
+## API — dashboard routes (session auth)
+
+New or expanded **dashboard-only** routes (not in public OpenAPI):
+
+- `GET/POST/PATCH/DELETE /dashboard/explorer/views` and `POST .../run`
+- `GET /dashboard/events`, `GET /dashboard/events/filter-options`, `GET /dashboard/events/metrics/histogram`
+- `GET/POST /dashboard/exports`, `GET /dashboard/exports/capabilities`, rerun, download, job detail
+- `GET/POST /dashboard/export-templates`, `POST .../run`
+
+Shared **`EventQuery`** schema in API and dashboard for saved views and export filter merge.
+
+Graceful degradation: missing tables return empty lists with `x-hyrelog-schema-drift` header where implemented.
+
+## API — public `/v1` surface
+
+Public [OpenAPI](https://api.hyrelog.com/openapi.json) remains the contract for integrations:
+
+- Events ingest/query, keys, webhooks, exports — unchanged entry points for API key clients.
+- Export job responses include **`failureSummary`** and **`retryHint`** for safer client messaging (see live spec).
+
+Dashboard-only features (saved views, filtered dashboard exports with full EventQuery) are intentionally **excluded** from `openapi.json` — see [Dashboard API overview](/api/dashboard-api-overview).
+
+## Documentation
+
+- New **Dashboard** section in this help center (home, explorer, saved views, exports).
+- This release note.
+- [Dashboard API overview](/api/dashboard-api-overview).
+- Refreshed static OpenAPI snapshot at `hyrelog/docs/api-reference/openapi.json` (was outdated sample data; now mirrors production).
+
+## Operations (internal)
+
+- RDS rotation → ECS redeploy Lambda: upgrade runtime to **Node.js 22.x** before AWS end-of-support for Node 20 (see deployment runbook in `hyrelog-archive`).
+
+## Upgrade checklist for operators
+
+1. Confirm API **migrate deploy** on all regional databases (saved views + export templates).
+2. Confirm dashboard **migrate deploy** (audit enum extensions).
+3. Smoke-test Event Explorer: list, filter, drawer, save/run/delete view.
+4. Smoke-test export from Explorer and from `/exports`.
+5. Verify GA Real-Time shows traffic on `app.hyrelog.com` (if used).
+
+## Breaking changes
+
+None for public `/v1` API consumers. Dashboard users may notice new home layout and Explorer toolbar; bookmarks without `?workspace=` behave as documented in [Dashboard home](/dashboard/home).

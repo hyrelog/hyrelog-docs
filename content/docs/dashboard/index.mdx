@@ -1,0 +1,43 @@
+---
+title: HyreLog Dashboard
+description: Product guide for the HyreLog web application—home, Event Explorer, saved views, and exports.
+---
+
+The **HyreLog dashboard** (`app.hyrelog.com`) is where your team operates day to day: reviewing audit traffic, managing workspaces, running filtered exports, and configuring API keys. This section documents **in-app** behavior as shipped in production.
+
+## Who this is for
+
+- **Company admins** (`OWNER`, `ADMIN`, `BILLING`): company-wide visibility, billing signals on the home page, and the ability to switch scope into any workspace.
+- **Workspace members** (`MEMBER`): workspace-scoped Event Explorer, exports, and saved views for workspaces they belong to.
+
+## What changed recently (summary)
+
+Production includes a redesigned **home** experience, a full **Event Explorer** with URL-driven filters and detail drawer, **saved explorer views** (named filter presets), richer **export jobs and templates** (including exports from saved views), and operational improvements behind the scenes (audit logging, native event histograms, schema migrations).
+
+See the detailed changelog: [May 2026 production update](/release-notes/2026-05-production-update).
+
+## Topics
+
+<Cards>
+  <Card title="Home & scope" href="/dashboard/home" />
+  <Card title="Event Explorer" href="/dashboard/event-explorer" />
+  <Card title="Saved views" href="/dashboard/saved-views" />
+  <Card title="Exports" href="/dashboard/exports" />
+</Cards>
+
+## API vs dashboard
+
+| Surface | Auth | Documented in |
+|--------|------|----------------|
+| **Public REST API** (`/v1/*`) | Bearer API key | [API reference](/api/reference), [OpenAPI](https://api.hyrelog.com/openapi.json) |
+| **Dashboard API** (`/dashboard/*`) | Session / dashboard token | [Dashboard API overview](/api/dashboard-api-overview) (not in public OpenAPI) |
+
+Integrations use the **public API**. The dashboard uses a separate authenticated API surface that is not published in `openapi.json` by design.
+
+## Related guides (integration)
+
+<Cards>
+  <Card title="Query events via API" href="/guides/query-and-filter-events" />
+  <Card title="Create exports via API" href="/guides/create-and-download-exports" />
+  <Card title="Manage API keys" href="/guides/manage-api-keys" />
+</Cards>

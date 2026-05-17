@@ -1,0 +1,71 @@
+---
+title: Dashboard exports
+description: Create, monitor, download, and rerun export jobs from the dashboard and Event Explorer.
+---
+
+The dashboard **Exports** area (`/exports`) and **Event Explorer** export dialog let you download audit data as **JSONL** or **CSV** using the same export job engine as the public API, with dashboard authentication and role-based workspace scoping.
+
+## Two ways to start an export
+
+### From Event Explorer
+
+1. Apply filters (workspace, dates, category, action, etc.).
+2. Open **Export filtered events**.
+3. Choose format and confirm.
+
+The job stores filter metadata and may reference an active **saved explorer view** id. See [Saved explorer views](/dashboard/saved-views).
+
+### From the Exports page
+
+View job history, open job detail, download completed files, rerun failed jobs, and run **export templates** when available.
+
+## Export jobs list
+
+The exports table shows job status, format, row counts, requester, timestamps (UTC), and actions:
+
+- **View** — detail drawer with filter summary and lifecycle messaging
+- **Download** — when status allows (proxied through the dashboard with size limits)
+- **Open in Explorer** — deep link reconstructing filters when captured on the job
+- **Rerun** — queue a new job with the same parameters (when permitted)
+
+Status labels and tones follow a consistent lifecycle: pending, running, succeeded, failed, canceled.
+
+## Filtered export capability probe
+
+Before enabling Explorer export, the dashboard may call `GET /dashboard/exports/capabilities` to verify the deployment supports **filtered** HOT exports. If unsupported, the UI shows a clear message rather than failing opaquely at submit time.
+
+## Export templates
+
+**Templates** are named, reusable filter presets (similar to saved views but oriented at export jobs):
+
+- List/create/run via dashboard API (`/dashboard/export-templates`)
+- Members see templates only for their workspaces
+- **Run template** queues a new export job with the template’s stored filters
+
+Templates require migration `20260514120000_export_templates` on regional API databases.
+
+## Saved view merge semantics
+
+`POST /dashboard/exports` accepts optional `savedExplorerViewId`:
+
+1. Load the saved view’s canonical `query`.
+2. Convert to export filters.
+3. Merge with explicit `filters` in the request body — **explicit body fields win**.
+
+## Download path
+
+Completed downloads are served via the dashboard proxy route (`/api/exports/[jobId]/download`) with:
+
+- Authentication enforced
+- Maximum download size guard
+- Sanitized error bodies on failure
+
+Large exports should be downloaded to disk with streaming clients; do not assume the full file loads in browser memory.
+
+## Public API equivalent
+
+Automation and CI should use [Create and download exports](/guides/create-and-download-exports) (`POST /v1/exports`, etc.) with API keys. Dashboard exports use `/dashboard/exports` and are documented in [Dashboard API overview](/api/dashboard-api-overview).
+
+## Audit trail
+
+Export lifecycle actions are audited (for example `EXPORT_REQUESTED`, `EXPORT_RERUN`, download-related evidence actions on the dashboard database). Use these for compliance evidence when investigating who exported data.

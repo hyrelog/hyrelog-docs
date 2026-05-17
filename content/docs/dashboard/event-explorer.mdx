@@ -1,0 +1,82 @@
+---
+title: Event Explorer
+description: Search, filter, sort, and inspect audit events in the HyreLog dashboard with shareable URLs.
+---
+
+**Event Explorer** (`/events`) is the primary forensics surface in the dashboard. It lists audit events from the HyreLog API with filters, pagination, sorting, a detail drawer, optional volume histogram, and paths into **exports** and **saved views**.
+
+## Access and workspace scope
+
+| Role | Workspace filter |
+|------|------------------|
+| `OWNER`, `ADMIN`, `BILLING` | Optional. Empty = all workspaces the company can see. Select a workspace to scope the table. |
+| `MEMBER` | Required. Locked to one of your member workspaces; chip cannot be cleared. |
+
+Workspace ids in the URL are **dashboard Prisma UUIDs**, not HyreLog API workspace primary keys.
+
+## URL-driven state (shareable links)
+
+Explorer state is encoded in the query string so you can bookmark or share a view:
+
+| Parameter | Purpose |
+|-----------|---------|
+| `workspace` | Dashboard workspace id (UUID) |
+| `savedView` | Active saved explorer view id (when applied from a saved view) |
+| `from`, `to` | ISO datetime range |
+| `category`, `action` | Text filters (trimmed, max 256 chars) |
+| `sort` | `timestamp` (default), `category`, `action`, `id` |
+| `order` | `desc` (default) or `asc` |
+| `page` | Page number (default 1) |
+| `pageSize` | `10`, `20`, `50`, `100`, or `200` |
+| `ref` | `dashboard` — shows a back link to home when opened from the dashboard |
+
+Malformed values are sanitized to safe defaults (for example invalid dates are cleared, oversized page sizes fall back to `10`).
+
+## Toolbar actions
+
+- **Filters:** date range, workspace (when permitted), category, action — with removable filter chips
+- **Reset filters:** restores defaults; members keep their workspace lock
+- **Saved views** menu — see [Saved explorer views](/dashboard/saved-views)
+- **Save view** — persist current filters as a named view
+- **Export** — create a filtered export job from current filters (and optional saved view id)
+
+## Results table
+
+Columns typically include:
+
+- Event id (short display)
+- Timestamp (UTC)
+- Category / action
+- Actor (email preferred)
+- Resource (type + id)
+- Integrity hints when present in metadata
+
+Click a row to open the **event detail drawer**.
+
+## Event detail drawer
+
+The drawer shows:
+
+- Full event id (copyable)
+- Timestamp, category, action
+- Actor and resource fields
+- Trace / correlation ids when present
+- IP, geo, user agent when returned by the API
+- **Metadata** as formatted JSON with sensitive keys redacted in the UI
+- Integrity-related badges when metadata contains integrity hints
+
+Press **Escape** or use the close control to dismiss.
+
+## Volume histogram
+
+When the API supports native histogram aggregation, the explorer can show event volume buckets for the active filter window. If native histograms are unavailable, the UI may fall back to partitioned queries (documented in chart footnotes).
+
+## Relationship to the public API
+
+Explorer uses **dashboard** endpoints (`GET /dashboard/events`, filter options, histogram), not `GET /v1/events` directly from the browser. Integrations should continue to use [Query and filter events](/guides/query-and-filter-events) with API keys.
+
+## Tips
+
+- Narrow time ranges before exporting very large result sets.
+- Use **saved views** for investigations you repeat (on-call playbooks, compliance reviews).
+- Deep links from **export job detail** can reopen Explorer with the same filter set when filters were captured on the job.

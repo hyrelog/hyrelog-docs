@@ -1,0 +1,76 @@
+---
+title: Dashboard API overview
+description: Session-authenticated dashboard routes used by app.hyrelog.com—not included in public OpenAPI.
+---
+
+The HyreLog **dashboard application** talks to **`/dashboard/*`** routes on `https://api.hyrelog.com`. These routes use **dashboard session authentication** (not Bearer API keys) and are **intentionally excluded** from [public OpenAPI](https://api.hyrelog.com/openapi.json).
+
+This page summarizes dashboard endpoints for operators and internal integrators. For customer integrations, use `/v1/*` only.
+
+## Why two APIs?
+
+| | Public `/v1/*` | Dashboard `/dashboard/*` |
+|--|----------------|---------------------------|
+| **Auth** | `Authorization: Bearer <api_key>` | Dashboard session / service token |
+| **OpenAPI** | Published at `/openapi.json` | Not published |
+| **Use case** | Your apps, scripts, ETL | HyreLog web UI only |
+
+## Events & explorer
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/dashboard/events` | Paginated event list (`limit`, `offset`, `sort`, `order`, filters) |
+| `GET` | `/dashboard/events/filter-options` | Distinct categories/actions for filter dropdowns |
+| `GET` | `/dashboard/events/metrics/histogram` | Time-bucket histogram (`interval`, `groupBy`, filters) |
+
+## Saved explorer views
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/dashboard/explorer/views` | List saved views (workspace-scoped for members) |
+| `POST` | `/dashboard/explorer/views` | Create (`name`, `query`, optional `workspaceId`, `description`) |
+| `GET` | `/dashboard/explorer/views/:viewId` | Get one |
+| `PATCH` | `/dashboard/explorer/views/:viewId` | Update |
+| `DELETE` | `/dashboard/explorer/views/:viewId` | Delete |
+| `POST` | `/dashboard/explorer/views/:viewId/run` | Return sanitized `EventQuery` (no event fetch) |
+
+**EventQuery** is a canonical JSON filter document shared with the dashboard UI. It can include date range, categories, actions, workspace ids, search, tags, trace ids, and pagination defaults.
+
+## Exports
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/dashboard/exports` | List export jobs |
+| `GET` | `/dashboard/exports/capabilities` | Probe filtered export support |
+| `POST` | `/dashboard/exports` | Create job (`format`, `filters`, optional `savedExplorerViewId`) |
+| `POST` | `/dashboard/exports/:jobId/rerun` | Rerun job |
+| `GET` | `/dashboard/exports/:jobId` | Job detail |
+| `GET` | `/dashboard/exports/:jobId/download` | Stream download |
+
+## Export templates
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/dashboard/export-templates` | List templates |
+| `POST` | `/dashboard/export-templates` | Save template |
+| `POST` | `/dashboard/export-templates/:templateId/run` | Queue export from template |
+
+## Schema drift headers
+
+If a regional database is missing a table migration, some list endpoints return empty arrays and set:
+
+- `x-hyrelog-schema-drift: saved_explorer_views`
+- `x-hyrelog-schema-drift: export_templates`
+
+Apply pending API migrations on that region before relying on the feature.
+
+## Audit logging
+
+Dashboard mutations are written to the API audit log (string action names such as `EVENTS_QUERIED`, `SAVED_VIEW_CREATED`, `EXPORT_REQUESTED`). The dashboard app also records typed audit rows in its own database for export evidence and saved views.
+
+## Further reading
+
+- [Event Explorer](/dashboard/event-explorer)
+- [Saved explorer views](/dashboard/saved-views)
+- [Dashboard exports](/dashboard/exports)
+- [May 2026 production update](/release-notes/2026-05-production-update)

@@ -2,6 +2,8 @@
   "title": "HyreLog Help Center",
   "pages": [
     "index",
+    "release-notes",
+    "dashboard",
     "concepts",
     "getting-started",
     "quickstarts",

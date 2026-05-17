@@ -23,6 +23,12 @@ description: OpenAPI-powered reference plus endpoint pages grouped by tag.
 - **Webhooks:** create/list/enable/disable webhooks and inspect deliveries
 - **Exports:** create export jobs, check status, download data
 
+## Dashboard API (not in OpenAPI)
+
+Routes under `/dashboard/*` power **app.hyrelog.com** (Event Explorer, saved views, dashboard exports). They use session authentication and are **excluded** from `openapi.json` by design.
+
+See [Dashboard API overview](/api/dashboard-api-overview) and the [Dashboard](/dashboard) product guides.
+
 ## Webhook Notes
 
 - Current webhook event types: `AUDIT_EVENT_CREATED` only.

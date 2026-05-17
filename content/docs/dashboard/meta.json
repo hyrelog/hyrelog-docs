@@ -1,0 +1,10 @@
+{
+  "title": "Dashboard",
+  "pages": [
+    "index",
+    "home",
+    "event-explorer",
+    "saved-views",
+    "exports"
+  ]
+}

@@ -1,0 +1,70 @@
+---
+title: Saved explorer views
+description: Save, share, and rerun named Event Explorer filter presets across your company or a workspace.
+---
+
+**Saved explorer views** let you store a canonical filter definition (an **EventQuery** JSON document) under a name, optionally scoped to a workspace, and reapply it later from Event Explorer.
+
+## What is stored
+
+Each saved view stores:
+
+| Field | Description |
+|-------|-------------|
+| **Name** | Required, up to 120 characters |
+| **Description** | Optional, up to 2000 characters |
+| **Query** | Sanitized filter object (dates, categories, actions, workspace, pagination defaults, etc.) — no secrets |
+| **Workspace** | Optional. `null` = company-wide (admins only). Set to scope the view to one workspace. |
+| **Default** | Optional flag for a preferred view in your scope |
+
+The query shape is shared between the dashboard and API (`EventQuery` schema). It is a superset of what appears in the Explorer URL today; advanced fields (search, tags, metadata filters, trace ids) can be persisted for future UI exposure.
+
+## Who can see and edit views
+
+Visibility follows the same rules as **export jobs** and **export templates**:
+
+| Role | List scope | Create company-wide |
+|------|------------|---------------------|
+| `OWNER`, `ADMIN`, `BILLING` | All company views | Yes |
+| `MEMBER` | Views in member workspaces only | No — workspace-scoped only |
+
+**Mutations** (edit/delete):
+
+- Elevated roles can change any view.
+- Members can edit or delete views **they created**.
+
+## Using saved views in the UI
+
+1. Open [Event Explorer](/dashboard/event-explorer).
+2. Set filters as needed.
+3. Open **Saved views** → **Save current view** (or edit an existing view you own).
+4. To apply a view: **Saved views** → select a name → the app runs the view and replaces the Explorer URL.
+
+When a saved view is active, the URL includes `savedView=<uuid>` so reloads keep context.
+
+## Exports from saved views
+
+When you create an export from Explorer with a saved view active, the export job can record `savedExplorerViewId`. The API **merges** the saved view’s query with any explicit export filters; **body filters override** saved view fields where both are set.
+
+## API (dashboard only)
+
+Saved views are **not** part of the public OpenAPI spec. Dashboard routes (session auth):
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/dashboard/explorer/views` | List views |
+| `POST` | `/dashboard/explorer/views` | Create |
+| `GET` | `/dashboard/explorer/views/:viewId` | Get one |
+| `PATCH` | `/dashboard/explorer/views/:viewId` | Update |
+| `DELETE` | `/dashboard/explorer/views/:viewId` | Delete |
+| `POST` | `/dashboard/explorer/views/:viewId/run` | Return sanitized query (no event fetch) |
+
+If the regional database has not applied the `saved_explorer_views` migration, the list endpoint returns an empty array and may send `x-hyrelog-schema-drift: saved_explorer_views`.
+
+## Audit trail
+
+Dashboard actions are recorded (dashboard audit log and API audit log) with actions such as `SAVED_VIEW_CREATED`, `SAVED_VIEW_UPDATED`, `SAVED_VIEW_DELETED`, and `SAVED_VIEW_RUN`.
+
+## Operational note
+
+After deploying API changes, ensure **all regional API databases** have migration `20260216120000_saved_explorer_views` applied. See your internal migration runbook if views fail to persist.

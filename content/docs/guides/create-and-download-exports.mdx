@@ -37,3 +37,7 @@ curl -L "https://api.hyrelog.com/v1/exports/JOB_ID/download" \
 ```
 
 For large exports, keep the request streaming and write directly to disk.
+
+## Dashboard exports
+
+To export from the UI with filters, saved views, and job history, see [Dashboard exports](/dashboard/exports). Dashboard jobs use `/dashboard/exports` (session auth). The same underlying export engine applies; merge behavior with [saved explorer views](/dashboard/saved-views) is dashboard-only.

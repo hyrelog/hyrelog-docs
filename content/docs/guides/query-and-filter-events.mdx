@@ -27,3 +27,7 @@ curl "https://api.hyrelog.com/v1/events?limit=50&category=auth&action=user.login
 1. Call endpoint without `cursor`.
 2. Read `nextCursor`.
 3. Repeat with `?cursor=...` until `nextCursor` is `null`.
+
+## Event Explorer in the dashboard
+
+For interactive search, shareable filter URLs, saved views, and exports from the UI, use [Event Explorer](/dashboard/event-explorer) in **app.hyrelog.com**. The Explorer uses dashboard APIs (`/dashboard/events`), not your API key from the browser.
